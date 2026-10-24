@@ -3,6 +3,9 @@ extends CharacterBody2D
 
 @export var speed = 400
 
+# Vector that tracks which way the player is facing for certain weapons
+var facing_direction: Vector2 = Vector2.RIGHT
+
 
 func _physics_process(delta: float) -> void:
 	# Gets normalized direction input
@@ -12,6 +15,7 @@ func _physics_process(delta: float) -> void:
 
 	if direction != Vector2.ZERO:
 		$AnimatedSprite2D.play()
+		facing_direction = direction.normalized()
 	else:
 		$AnimatedSprite2D.stop()
 
