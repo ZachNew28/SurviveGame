@@ -5,23 +5,17 @@ extends CharacterBody2D
 
 
 func _physics_process(delta: float) -> void:
-	# Get the input direction and handle the movement/deceleration.
-	if Input.is_action_pressed("move_right"):
-		velocity.x += 1
-	if Input.is_action_pressed("move_left"):
-		velocity.x -= 1
-	if Input.is_action_pressed("move_down"):
-		velocity.y += 1
-	if Input.is_action_pressed("move_up"):
-		velocity.y -= 1
+	# Gets normalized direction input
+	var direction := Input.get_vector("move_left", "move_right", "move_up", "move_down")
+	velocity = direction * speed
+	move_and_slide()
 
-	if velocity.length() > 0:
-		# First time using this node type so make sure .normalized()
-		# is actually needed
-		velocity = velocity.normalized() * speed
+	if direction != Vector2.ZERO:
 		$AnimatedSprite2D.play()
 	else:
 		$AnimatedSprite2D.stop()
 
-	# TODO: Add code so that when going up and down, the current
-	# sprite is based on the last horizontal direction input
+	# Only update facing on horizontal input, so moving straight up/down
+	# keeps the last horizontal facing
+	if direction.x != 0:
+		$AnimatedSprite2D.flip_h = direction.x < 0
